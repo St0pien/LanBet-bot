@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "bun src/index.ts",
+    "deploy:dev": "bun src/deploy.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.8"
+  }
+}
