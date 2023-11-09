@@ -53,3 +53,5 @@ bun start
 ```
 
 ## Screenshots
+![image](https://github.com/St0pien/LanBet-bot/assets/50048994/9cfc2ad7-340d-4d25-a53c-0406b2d80865)
+
