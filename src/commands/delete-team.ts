@@ -55,7 +55,8 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     }
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
     handler
 };

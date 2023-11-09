@@ -77,9 +77,9 @@ export const handler = async (interaction: ChatInputCommandInteraction) => {
                 components: [finalRow]
             });
         } else {
-            const winner: Team = game[i.values[0]];
+            const winner: Team = game[i.values[0] as 'team1' | 'team2'];
 
-            gameRepo.endGame(game.id, winner.id);
+            gameRepo.endGame(game.id!, winner.id!);
             await i.reply(
                 `Winner selected of ${game.team1.name} vs ${game.team2.name}: ${winner.name}`
             );
@@ -88,7 +88,8 @@ export const handler = async (interaction: ChatInputCommandInteraction) => {
     });
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
     handler
 };

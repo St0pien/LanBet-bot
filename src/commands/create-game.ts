@@ -25,7 +25,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     const teamRepo = new TeamRepository(db);
     const gameRepo = new GameRepository(db);
 
-    const stake = await interaction.options.getNumber('stake');
+    const stake = await interaction.options.getNumber('stake')!;
 
     const options = teamRepo
         .listTeams()
@@ -63,7 +63,8 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     });
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
-    handler
+    handler,
 };

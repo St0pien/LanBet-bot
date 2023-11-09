@@ -78,6 +78,10 @@ export class GameRepository {
         ).full;
 
         const game = this.getGame(id);
+        if (!id || !game.winner || !game.team1.id || !game.team2.id) {
+            throw new Error('Critical error in GameRepo');
+        }
+
         const winners = this._db
             .query(`SELECT username FROM bets WHERE game = ? AND team = ?`)
             .all(id, game.winner);

@@ -53,7 +53,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
 
     const chosenGame = games[parseInt(answer.values[0])];
     interaction.deleteReply();
-    gameRepo.openGame(chosenGame.id);
+    gameRepo.openGame(chosenGame.id!);
 
     // Creating and sending widget for betting
 
@@ -121,7 +121,8 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     });
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
     handler
 };

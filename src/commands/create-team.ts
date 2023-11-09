@@ -22,8 +22,8 @@ const builder = new SlashCommandBuilder()
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
     const teamRepo = new TeamRepository(db);
-    const name = interaction.options.getString('team');
-    const logo = interaction.options.getAttachment('logo').url;
+    const name = interaction.options.getString('team')!;
+    const logo = interaction.options.getAttachment('logo')!.url;
 
     teamRepo.addTeam({
         name,
@@ -40,7 +40,8 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
     });
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
     handler
 };

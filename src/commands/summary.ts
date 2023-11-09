@@ -47,7 +47,7 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
 
     const game = games[parseInt(answer.values[0])];
 
-    const summary = gameRepo.summup(game.id);
+    const summary = gameRepo.summup(game.id!);
 
     await answer.reply(
         `Jackpot: ${summary.fullStake}, single bet: ${
@@ -55,22 +55,23 @@ const handler = async (interaction: ChatInputCommandInteraction) => {
         }, every winner gets: ${summary.fullStake / summary.winners.length}`
     );
 
-    await answer.channel.send('Winners: ');
+    await answer.channel!.send('Winners: ');
 
-    await answer.channel.send(
+    await answer.channel!.send(
         summary.winners.map(winner => `* ${winner.username}`).join('\n')
     );
 
-    await answer.channel.send('Losers: ');
+    await answer.channel!.send('Losers: ');
 
-    await answer.channel.send(
+    await answer.channel!.send(
         summary.losers.map(loser => `* ${loser.username}`).join('\n')
     );
 
     await interaction.deleteReply();
 };
 
-export const command = {
+export default {
+    name: builder.name,
     builder,
     handler
 };
