@@ -1,13 +1,14 @@
 import {
-    CacheType,
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
     ClientEvents,
-    Interaction,
     SlashCommandBuilder
 } from 'discord.js';
 
 export interface SlashCommand {
     builder: SlashCommandBuilder;
-    handler: (interaction: Interaction<CacheType>) => Promise<void>;
+    handler: (interaction: ChatInputCommandInteraction) => Promise<void>;
+    autocomplete?: (interaction: AutocompleteInteraction) => Promise<void>;
 }
 
 export interface DiscordEvent<T extends keyof ClientEvents> {

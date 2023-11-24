@@ -1,8 +1,12 @@
 import { TOKEN } from './env';
 import { DiscordClient } from './core/DiscordClient';
 import { GatewayIntentBits } from 'discord.js';
+import { TeamRepository } from './repos/TeamRepository';
+import { db } from './infrasturcture/db';
 
 (async () => {
+    const repo = new TeamRepository(db);
+
     const client = new DiscordClient({
         intents: [GatewayIntentBits.Guilds]
     });

@@ -1,5 +1,6 @@
 import {
     ActionRowBuilder,
+    AutocompleteInteraction,
     ChatInputCommandInteraction,
     ComponentType,
     SlashCommandBuilder,
@@ -11,52 +12,47 @@ import { db } from '../infrasturcture/db';
 
 const builder = new SlashCommandBuilder()
     .setName('delete-team')
-    .setDescription('Delete team!');
+    .setDescription('Delete team!')
+    .addStringOption(option =>
+        option
+            .setName('team')
+            .setDescription('Team to delete')
+            .setRequired(true)
+            .setAutocomplete(true)
+    );
 
 const handler = async (interaction: ChatInputCommandInteraction) => {
     const teamRepo = new TeamRepository(db);
 
-    const options = teamRepo
-        .listTeams()
-        .map(team =>
-            new StringSelectMenuOptionBuilder()
-                .setLabel(team.name)
-                .setValue(team.id!.toString())
-        );
+    const input = interaction.options.getString('team')!;
 
-    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-        new StringSelectMenuBuilder()
-            .setCustomId('delete-select')
-            .setPlaceholder('Select team to delete!')
-            .setMinValues(1)
-            .setMaxValues(1)
-            .addOptions(...options)
-    );
+    const team = teamRepo.findByName(input);
 
-    const res = await interaction.reply({
-        content: 'Select the team!',
-        components: [row]
-    });
-
-    try {
-        const answer = await res.awaitMessageComponent({
-            componentType: ComponentType.StringSelect,
-            time: 60_000
-        });
-
-        const [id] = answer.values;
-        teamRepo.deleteTeam(parseInt(id));
-        answer.update({
-            content: 'Team deleted!',
-            components: []
-        });
-    } catch {
-        await interaction.deleteReply();
+    if (team) {
+        teamRepo.deleteTeam(team.id!);
+        await interaction.reply(`Team ${team.name} deleted!`)
+    } else {
+        await interaction.reply('no such team exists');
     }
+};
+
+const autocomplete = async (interaction: AutocompleteInteraction) => {
+    const input = interaction.options.getFocused();
+    const teamRepo = new TeamRepository(db);
+
+    const matchedTeams = teamRepo.filterTeams(input);
+
+    await interaction.respond(
+        matchedTeams.map(team => ({
+            name: team.name,
+            value: team.name
+        }))
+    );
 };
 
 export default {
     name: builder.name,
     builder,
-    handler
+    handler,
+    autocomplete
 };

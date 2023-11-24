@@ -21,23 +21,40 @@ async function handler(interaction: BaseInteraction) {
         buttonHandlers[action](interaction, data);
     }
 
-    if (!interaction.isChatInputCommand()) return;
+    if (interaction.isAutocomplete()) {
+        const { autocomplete } = client.commands.get(interaction.commandName)!;
 
-    Logger.info(
-        `${interaction.commandName}#${interaction.id} | Received command interaction`
-    );
+        if (!!autocomplete) {
+            try {
+                await autocomplete(interaction);
+                Logger.success(
+                    `${interaction.commandName}#${interaction.id} | Autocomplete succesfull`
+                );
+            } catch (e) {
+                Logger.error(
+                    `${interaction.commandName}#${interaction.id} | Error occurred during handling autocomplete: ${e}`
+                );
+            }
+        }
+    }
 
-    const { handler } = client.commands.get(interaction.commandName)!;
-
-    try {
-        await handler(interaction);
-        Logger.success(
-            `${interaction.commandName}#${interaction.id} | handled successfully`
+    if (interaction.isChatInputCommand()) {
+        Logger.info(
+            `${interaction.commandName}#${interaction.id} | Received command interaction`
         );
-    } catch (e) {
-        Logger.error(
-            `${interaction.commandName}#${interaction.id} | Error occurred during handling command: ${e}`
-        );
+
+        const { handler } = client.commands.get(interaction.commandName)!;
+
+        try {
+            await handler(interaction);
+            Logger.success(
+                `${interaction.commandName}#${interaction.id} | handled successfully`
+            );
+        } catch (e) {
+            Logger.error(
+                `${interaction.commandName}#${interaction.id} | Error occurred during handling command: ${e}`
+            );
+        }
     }
 }
 

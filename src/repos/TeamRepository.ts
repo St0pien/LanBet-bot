@@ -32,6 +32,26 @@ export class TeamRepository {
         return result;
     }
 
+    filterTeams(name: string): Team[] {
+        const query = this._db.prepare(
+            `SELECT * FROM teams WHERE name LIKE ? ESCAPE '\\'`
+        );
+
+        return query.all(
+            `%${name.replaceAll('%', '\\%').replaceAll('_', '\\_')}%`
+        ) as Team[];
+    }
+
+    findByName(name: string): Team {
+        const query = this._db.prepare(
+            `SELECT * FROM teams WHERE name LIKE ? ESCAPE '\\'`
+        );
+
+        return query.get(
+            name.replaceAll('%', '\\%').replaceAll('_', '\\_')
+        ) as Team;
+    }
+
     deleteTeam(id: number) {
         const del = this._db.prepare(`DELETE FROM teams WHERE id=?`);
         del.run(id);

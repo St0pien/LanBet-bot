@@ -1,8 +1,6 @@
 import { join } from 'path';
 import { readdirSync, lstatSync } from 'fs';
-import { SlashCommand } from './types';
 import { Collection } from 'discord.js';
-import { Logger } from '../infrasturcture/Logger';
 
 // export async function loadCommands(
 //     base: string
